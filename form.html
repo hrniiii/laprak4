@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Purchase Form - SHOELAST</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      }
+
+      nav {
+        padding: 1rem 2rem;
+        background: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2.5rem;
+        perspective: 1000px;
+      }
+
+      .nav-item {
+        position: relative;
+      }
+
+      .nav-item > a {
+        text-decoration: none;
+        color: var(--text-color);
+        font-weight: 400;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        padding: 0.5rem 1rem;
+        transform-style: preserve-3d;
+      }
+
+      .nav-item > a:hover {
+        transform: translateZ(10px);
+        color: var(--accent-color);
+      }
+
+      .purchase-form {
+        max-width: 500px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #555;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 0.75rem;
+        background: black;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      .submit-btn:hover {
+        background: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">SHOELAST</div>
+      <div class="nav-item">
+        <a href="website.html">Home</a>
+      </div>
+    </nav>
+
+    <form class="purchase-form" id="purchaseForm">
+      <h2 style="margin-bottom: 1.5rem">Purchase Form</h2>
+      <div class="form-group">
+        <label>Shoe Type</label>
+        <input type="text" name="tipe" id="shoeType" readonly />
+      </div>
+      <div class="form-group">
+        <label>Price</label>
+        <input type="text" name="harga" id="shoePrice" readonly />
+      </div>
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" name="nama" id="customerName" required />
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" name="nomor" id="phoneNumber" required />
+      </div>
+      <div class="form-group">
+        <label>Delivery Address</label>
+        <textarea id="address" name="alamat" rows="3" required></textarea>
+      </div>
+      <button type="submit" class="submit-btn">Buy</button>
+    </form>
+
+    <script>
+      // Get URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const shoe = urlParams.get("shoe");
+      const price = urlParams.get("price");
+
+      // Fill form with URL parameters
+      if (shoe && price) {
+        document.getElementById("shoeType").value = shoe;
+        document.getElementById("shoePrice").value = price;
+      }
+    </script>
+    <script>
+      const scriptURL = "https://script.google.com/macros/s/AKfycbyhgEsejki_KJ555-IpIgj1bt1pF8rD_8OzNFYD_7BeklhypcLeYGbdI6f5ckC8a49-Hw/exec"; // Ganti dengan URL sebenarnya
+      const form = document.getElementById("purchaseForm");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        // Tampilkan loading state
+        const submitButton = form.querySelector(".submit-btn");
+        submitButton.textContent = "Mengirim...";
+        submitButton.disabled = true;
+
+        fetch(scriptURL, {
+          method: "POST",
+          body: new FormData(form),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Gagal mengirim data");
+            }
+            alert("Pesanan berhasil dikirim!");
+            form.reset();
+            window.location.href = "website.html";
+          })
+          .catch((error) => {
+            alert("Terjadi kesalahan: " + error.message);
+          })
+          .finally(() => {
+            submitButton.textContent = "Buy";
+            submitButton.disabled = false;
+          });
+      });
+    </script>
+  </body>
+</html>
